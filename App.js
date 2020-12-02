@@ -27,20 +27,29 @@ const fetchFonts = () => {
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
 
-  if (!fontLoaded) {
-    return (
-      <AppLoading
-        startAsync={fetchFonts}
-        onFinish={() => {
-          setFontLoaded(true);
-        }}
-      />
-    );
-  }
+  // if (!fontLoaded) {
+  //   return (
+  //     <AppLoading
+  //       startAsync={fetchFonts}
+  //       onFinish={() => {
+  //         setFontLoaded(true);
+  //       }}
+  //     />
+  //   );
+  // }
 
   return (
     <Provider store={store}>
-      <ShopNavigator />
+      {fontLoaded ? (
+        <ShopNavigator />
+      ) : (
+        <AppLoading
+          startAsync={fetchFonts}
+          onFinish={() => {
+            setFontLoaded(true);
+          }}
+        />
+      )}
     </Provider>
   );
 }
