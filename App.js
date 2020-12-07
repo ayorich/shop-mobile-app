@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
+import ReduxThunk from "redux-thunk";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
 // import { composeWithDevTools } from "redux-devtools-extension";
@@ -15,10 +16,10 @@ const rootReducer = combineReducers({
   orders: ordersReducer,
 });
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
-const fetchFonts = () => {
-  Font.loadAsync({
+const fetchFonts = async () => {
+  await Font.loadAsync({
     "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
     "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
   });
@@ -27,29 +28,20 @@ const fetchFonts = () => {
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
 
-  // if (!fontLoaded) {
-  //   return (
-  //     <AppLoading
-  //       startAsync={fetchFonts}
-  //       onFinish={() => {
-  //         setFontLoaded(true);
-  //       }}
-  //     />
-  //   );
-  // }
+  if (!fontLoaded) {
+    return (
+      <AppLoading
+        startAsync={fetchFonts}
+        onFinish={() => {
+          setFontLoaded(true);
+        }}
+      />
+    );
+  }
 
   return (
     <Provider store={store}>
-      {fontLoaded ? (
-        <ShopNavigator />
-      ) : (
-        <AppLoading
-          startAsync={fetchFonts}
-          onFinish={() => {
-            setFontLoaded(true);
-          }}
-        />
-      )}
+      <ShopNavigator />
     </Provider>
   );
 }
