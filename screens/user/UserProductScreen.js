@@ -10,7 +10,7 @@ import * as productsActions from "../../store/actions/products";
 
 const UserProductsScreen = (props) => {
   const userProducts = useSelector((state) => state.products.userProducts);
-  // console.log(userProducts);
+
   const dispatch = useDispatch();
   const editProductHandler = (id) => {
     return props.navigation.navigate("EditProduct", { productId: id });

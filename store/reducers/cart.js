@@ -35,7 +35,7 @@ export default (state = initialState, action) => {
       };
     case REMOVE_FROM_CART:
       const selectedCartItem = state.items[action.productId];
-      //   console.log(selectedCartItem);
+
       const currentQty = selectedCartItem.quantity;
       let updatedCartItems;
       if (currentQty > 1) {
