@@ -18,6 +18,7 @@ const CartScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
+
   const cartItems = useSelector((state) => {
     const transformedCartItems = [];
     for (const key in state.cart.items) {
@@ -33,6 +34,8 @@ const CartScreen = (props) => {
       a.productId > b.productId ? 1 : -1
     );
   });
+
+  // console.log(cartItems);
   const dispatch = useDispatch();
 
   const sendOrderHandler = async () => {

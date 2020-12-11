@@ -32,6 +32,7 @@ const ProductsOverviewScreen = (props) => {
     try {
       await dispatch(productsActions.fetchProducts());
     } catch (err) {
+      console.log(err);
       setError(err.message);
     }
     setIsRefreshing(false);

@@ -4,10 +4,12 @@ export const ADD_ORDER = "ADD_ORDER";
 export const SET_ORDERS = "SET_ORDERS";
 
 export const fetchOrders = () => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const userId = getState().auth.userId;
+
     try {
       const res = await fetch(
-        "https://shopapp-mobile-default-rtdb.firebaseio.com/orders/u1.json"
+        `https://shopapp-mobile-default-rtdb.firebaseio.com/orders/${userId}.json`
       );
 
       if (!res.ok) {
@@ -34,37 +36,44 @@ export const fetchOrders = () => {
 };
 
 export const addOrder = (cartItems, totalAmount) => {
-  return async (dispatch) => {
-    const date = new Date();
-    const res = await fetch(
-      "https://shopapp-mobile-default-rtdb.firebaseio.com/orders/u1.json",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          cartItems,
-          totalAmount,
-          date: date.toISOString(),
-        }),
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
+    const userId = getState().auth.userId;
+    // console.log(token);
+    // console.log(userId);
+    try {
+      const date = new Date();
+      const res = await fetch(
+        `https://shopapp-mobile-default-rtdb.firebaseio.com/orders/${userId}.json?auth=${token}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            cartItems,
+            totalAmount,
+            date: date.toISOString(),
+          }),
+        }
+      );
+      // console.log(res);
+      if (!res.ok) {
+        throw new Error("Something went wrong!");
       }
-    );
+      const resData = await res.json();
 
-    if (!res.ok) {
-      throw new Error("Something went wrong!");
+      dispatch({
+        type: ADD_ORDER,
+        orderData: {
+          id: resData.name,
+          items: cartItems,
+          amount: totalAmount,
+          date: date,
+        },
+      });
+    } catch (err) {
+      console.log(err);
     }
-
-    const resData = await res.json();
-
-    dispatch({
-      type: ADD_ORDER,
-      orderData: {
-        id: resData.name,
-        items: cartItems,
-        amount: totalAmount,
-        date: date,
-      },
-    });
   };
 };

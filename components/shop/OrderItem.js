@@ -7,7 +7,7 @@ import CartItem from "./CartItem";
 
 const OrderItem = (props) => {
   const [showDetails, setShowDetails] = useState(false);
-
+  console.log(props);
   return (
     <Card style={styles.orderItem}>
       <View style={styles.summary}>

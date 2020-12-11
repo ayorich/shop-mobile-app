@@ -65,7 +65,7 @@ const AuthScreen = (props) => {
       Alert.alert("An error occurred!", error, [{ text: "Ok" }]);
     }
   }, [error]);
-  const authHandler = async () => {
+  const authHandler = () => {
     let action;
     if (isSignup) {
       action = authActions.signup(
@@ -81,8 +81,7 @@ const AuthScreen = (props) => {
     setError(null);
     setIsloading(true);
     try {
-      await dispatch(action);
-      props.navigation.navigate("Shop");
+      dispatch(action).then(props.navigation.navigate("Shop"));
     } catch (err) {
       setError(err.message);
       setIsloading(false);
