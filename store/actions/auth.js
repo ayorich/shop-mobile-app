@@ -2,8 +2,15 @@ import AsyncStorage from "@react-native-community/async-storage";
 
 export const AUTHENTICATE = "AUTHENTICATE";
 export const LOGOUT = "LOGOUT";
+export const SET_DID_TRY_AL = "SET_DID_TRY_AL";
 
 let timer;
+
+export const setDidTryAl = () => {
+  return {
+    type: SET_DID_TRY_AL,
+  };
+};
 
 export const authenticate = (userId, token, expiryTime) => {
   return (dispatch) => {
@@ -74,13 +81,17 @@ export const login = (email, password) => {
           }),
         }
       );
+      console.log(res);
       if (!res.ok) {
         const errorResData = await res.json();
         const errorId = errorResData.error.message;
         let message = "Something went wrong ";
         if (errorId === "EMAIL_NOT_FOUND") {
           message = "This email could not be found!";
-        } else if (errorId === "INVALID_PASSWORD") {
+        } else if (
+          errorId === "INVALID_PASSWORD" ||
+          errorId === "MISSING_PASSWORD"
+        ) {
           message = "This password is not valid";
         }
         throw new Error(message);

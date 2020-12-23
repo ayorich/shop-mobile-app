@@ -81,7 +81,7 @@ const AuthScreen = (props) => {
     setError(null);
     setIsloading(true);
     try {
-      dispatch(action).then(props.navigation.navigate("Shop"));
+      dispatch(action);
     } catch (err) {
       setError(err.message);
       setIsloading(false);
@@ -98,6 +98,8 @@ const AuthScreen = (props) => {
     },
     [dispatchFormState]
   );
+
+  // console.log(formState);
 
   return (
     <KeyboardAvoidingView keyboardVerticalOffset={50} style={styles.screen}>
@@ -151,7 +153,7 @@ const AuthScreen = (props) => {
     </KeyboardAvoidingView>
   );
 };
-AuthScreen.navigationOptions = {
+export const screenOptions = {
   headerTitle: "Authenticate",
 };
 const styles = StyleSheet.create({
