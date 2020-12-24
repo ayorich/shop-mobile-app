@@ -36,6 +36,7 @@ export const fetchOrders = () => {
 };
 
 export const addOrder = (cartItems, totalAmount) => {
+  console.log(cartItems);
   return async (dispatch, getState) => {
     const token = getState().auth.token;
     const userId = getState().auth.userId;
@@ -72,6 +73,25 @@ export const addOrder = (cartItems, totalAmount) => {
           date: date,
         },
       });
+
+      for (const cartItem of cartItems) {
+        const pushToken = cartItem.productPushToken;
+
+        fetch("https://exp.host/--/api/v2/push/send", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Accept-Encoding": "gzip,deflate",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            to: pushToken,
+            data: { extraData: "some data" },
+            title: "Order was place",
+            body: cartItem.productTitle,
+          }),
+        });
+      }
     } catch (err) {
       console.log(err);
     }
